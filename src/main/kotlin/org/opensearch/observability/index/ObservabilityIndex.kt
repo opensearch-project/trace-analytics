@@ -54,6 +54,7 @@ internal object ObservabilityIndex {
     const val NOTEBOOKS_INDEX_NAME = ".opensearch-notebooks"
     private const val OBSERVABILITY_MAPPING_FILE_NAME = "observability-mapping.yml"
     private const val OBSERVABILITY_SETTINGS_FILE_NAME = "observability-settings.yml"
+    private const val SEARCH_ACTION_PREFERENCE = "_primary"
 
     private var mappingsUpdated: Boolean = false
     private lateinit var client: Client
@@ -298,6 +299,7 @@ internal object ObservabilityIndex {
         val searchRequest = SearchRequest()
             .indices(INDEX_NAME)
             .source(sourceBuilder)
+            .preference(SEARCH_ACTION_PREFERENCE)
         val actionFuture = client.search(searchRequest)
         val response = actionFuture.actionGet(PluginSettings.operationTimeoutMs)
         val result = ObservabilityObjectSearchResult(request.fromIndex.toLong(), response, searchHitParser)
